@@ -1,0 +1,72 @@
+\documentclass[11pt]{beamer}
+\usetheme{Boadilla}
+\usepackage[style=alphabetic]{biblatex}
+\usepackage{csquotes, amssymb, graphicx, tabularx, xcolor}
+\usepackage[normalem]{ulem}
+\usepackage{listings}
+\lstset{language=Python, basicstyle=\ttfamily\small}
+
+\title{Pricing American style options using binomial tree models}
+\author{Petr Kosenko}
+\begin{document}
+\begin{frame}[plain]
+    \maketitle
+\end{frame}
+\begin{frame}\frametitle{American options}
+	\begin{definition}
+		An American option is a contract which gives the right to buy or sell a risky asset at for the strike price $K$ at \textbf{any point} before the expiration date $T$.
+	\end{definition}
+	The difference between European and American style options is that Europen options can only be exercised right at the expiration date, whereas American options can be exerciesed before time $T$ as well. This aspect renders the standard pricing approaches (via Black-Scholes or other stochastic volatility models) unable to provide a closed formula for American option pricing.
+\end{frame}
+
+\begin{frame}\frametitle{Binomial tree models}
+		To remedy this, we are going to use the \textbf{binomial tree models}, which model the option prices by, simply speaking, working out all possible outcomes which arise from possible price movement patterns, which itself is modeled via a Bernoulli random variable with probability $p \in (0, 1)$.
+		\begin{itemize}
+			\item Cox-Ross-Rubinstein model -- essentially discretizes the Black-Scholes model by setting the up-down movements to $u, d = e^{\pm \sigma \sqrt{\Delta t}}$ with the probability $p = \frac{e^{\Delta t} - d}{u - d}$.
+			\item Jarrow-Rudd model -- similar to CRR model but $p$ is forced to be $1/2$, with $u$ and $d$ adjusted accordingly.
+			\item Tian model -- uses higher moments to more accurately ``tilt'' the binomial tree.
+		\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Results and conclusions}
+	We have implemented all three models in Python, and tested their performance for on some stocks. There are the graphs we get for AAPL:
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{apple_CRR}
+		\caption{CRR model for AAPL prices with Dec 19 exp date}
+		\label{fig:applecrr}
+	\end{figure}
+\end{frame}
+\begin{frame}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{apple_JR}
+		\caption{JR model for AAPL prices with Dec 19 exp date}
+		\label{fig:appleJR}
+	\end{figure}
+	
+\end{frame}
+\begin{frame}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\linewidth]{apple_Tian}
+		\caption{Tian model for AAPL prices with Dec 19 exp date}
+		\label{fig:appletian}
+	\end{figure}
+\end{frame}
+\begin{frame}{References}
+	\begin{thebibliography}{9}
+		\bibitem{CRR}
+		Cox, J. C., Ross, S. A., Rubinstein, M., “Option Pricing: A Simplified Approach”, Journal of Financial Economics (1979)
+		
+		\bibitem{JR}
+		Jarrow R., Rudd A.,	Approximate option valuation for arbitrary stochastic processes, Journal of Financial Economics, Volume 10, Issue 3, 1982, p. 347-369,
+		
+		\bibitem{Tian}
+		Tian, Y.“. (1999), A flexible binomial option pricing model. J. Fut. Mark., 19: 817-843. 
+	\end{thebibliography}
+\end{frame}
+\end{document}
